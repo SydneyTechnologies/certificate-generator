@@ -4,7 +4,7 @@ import numpy as np
 import urllib.request
 import io
 
-url = 'http://localhost:8000/resources/'  # Replace with the URL of the image you want to read
+url = 'https://mcs-backend.up.railway.app/resources/'  # Replace with the URL of the image you want to read
 
 
 #import crud, tables
