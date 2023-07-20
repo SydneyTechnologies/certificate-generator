@@ -9,7 +9,7 @@ sqlalchemy = "*"
 psycopg2 = "*"
 python-decouple = "*"
 pillow = "*"
-opencv-python = "*"
 numpy = "==1.24.4"
+opencv-contrib-python-headless = "*"
 
 [dev-packages]
