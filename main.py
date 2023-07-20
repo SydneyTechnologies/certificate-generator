@@ -3,7 +3,7 @@ from utils.connect_to_db import Base, engine
 import utils.crud as crud, tables.tables as tables
 from fastapi.responses import FileResponse
 from schema.schema import MemberSchema
-from utils.cert_generator import *
+# from utils.cert_generator import *
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -67,10 +67,11 @@ def getCertificate(email:str, db=Depends(crud.get_db)):
     # check if the user has a certificate 
     hasCertificate: bool = crud.certify(user)
     if hasCertificate:
-        template = generate_cert(user.fullName, user.track)
-        filePath = f'{user.fullName}.png'
-        cv2.imwrite(filePath, template)
-        response = FileResponse(filePath, filename=filePath, media_type="image/png")
-        return response
+        return {"status":"Certificate generation is being fixed"}
+        # template = generate_cert(user.fullName, user.track)
+        # filePath = f'{user.fullName}.png'
+        # cv2.imwrite(filePath, template)
+        # response = FileResponse(filePath, filename=filePath, media_type="image/png")
+        # return response
 
     return {"status":"User has not been assigned a certificate"}
