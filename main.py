@@ -14,7 +14,7 @@ DESCRIPTION = "Backend system for MCS"
 app = FastAPI(title= TITLE, description=DESCRIPTION)
 app.mount("/resources", StaticFiles(directory="resources"))
 
-origins = ["http://localhost","http://localhost:5500", "http://127.0.0.1:5500", "http://127.0.0.1:5500"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
