@@ -1,9 +1,11 @@
+import cv2
 from fastapi import FastAPI, Depends, Body, HTTPException, status
 from utils.connect_to_db import Base, engine
 import utils.crud as crud, tables.tables as tables
 from fastapi.responses import FileResponse
 from schema.schema import MemberSchema
-from utils.cert_generator import *
+from utils.cert_generator import generate_cert
+from utils.mentor_gen import generate_cert as generate_cert_mentor
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -67,10 +69,17 @@ def getCertificate(email:str, db=Depends(crud.get_db)):
     # check if the user has a certificate 
     hasCertificate: bool = crud.certify(user)
     if hasCertificate:
-        template = generate_cert(user.fullName, user.track)
-        filePath = f'{user.fullName}.png'
-        cv2.imwrite(filePath, template)
-        response = FileResponse(filePath, filename=filePath, media_type="image/png")
+
+        if user.is_mentor:
+            template = generate_cert_mentor(user.fullName, user.track)
+            filePath = f'{user.fullName}.png'
+            cv2.imwrite(filePath, template)
+            response = FileResponse(filePath, filename=filePath, media_type="image/png")
+        else:
+            template = generate_cert(user.fullName, user.track)
+            filePath = f'{user.fullName}.png'
+            cv2.imwrite(filePath, template)
+            response = FileResponse(filePath, filename=filePath, media_type="image/png")
         return response
 
     return {"status":"User has not been assigned a certificate"}
