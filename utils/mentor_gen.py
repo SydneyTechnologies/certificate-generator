@@ -24,7 +24,9 @@ def generate_cert(name, track):
     line_4 = 'of the participants. We express our heartfelt gratitude for your efforts.'
 
     #now the image
-    template = cv2.imread('mentor_template.png')           #Loading the img
+    req = urllib.request.urlopen(url+'mentor_template.png')
+    arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+    template = cv2.imdecode(arr, -1)
     template = cv2.cvtColor(template,cv2.COLOR_BGR2RGB)  #OpenCV uses BGR so converting to RGB
     template = Image.fromarray(template)                 #Sending to PIL
     draw = ImageDraw.Draw(template)

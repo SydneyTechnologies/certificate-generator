@@ -40,7 +40,7 @@ def generate_cert(name, track):
     line_3 = 'hard work, and commitment have led you to achieve this significant'
     line_4 = 'milestone.  Congratulations on your accomplishment!'
 
-    req = urllib.request.urlopen(url+'cert_template.jpeg')
+    req = urllib.request.urlopen(url+'cert_template.png')
     arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
     template = cv2.imdecode(arr, -1)
     if not template.any(): 
