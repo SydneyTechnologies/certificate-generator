@@ -1,4 +1,6 @@
+import os
 import cv2
+import asyncio
 from fastapi import FastAPI, Depends, Body, HTTPException, status
 from utils.connect_to_db import Base, engine
 import utils.crud as crud, tables.tables as tables
@@ -68,18 +70,28 @@ def getCertificate(email:str, db=Depends(crud.get_db)):
 
     # check if the user has a certificate 
     hasCertificate: bool = crud.certify(user)
+    filePath = f'{user.fullName}.png'
+
     if hasCertificate:
 
         if user.is_mentor:
             template = generate_cert_mentor(user.fullName, user.track)
-            filePath = f'{user.fullName}.png'
             cv2.imwrite(filePath, template)
             response = FileResponse(filePath, filename=filePath, media_type="image/png")
         else:
             template = generate_cert(user.fullName, user.track)
-            filePath = f'{user.fullName}.png'
             cv2.imwrite(filePath, template)
             response = FileResponse(filePath, filename=filePath, media_type="image/png")
+        asyncio.run(deleteCertificate(filePath))
         return response
 
     return {"status":"User has not been assigned a certificate"}
+
+async def deleteCertificate(filePath:str):
+    # wait for 10 minutes then delete the generated pdf
+    await asyncio.wait(2)
+    try: 
+        os.remove(filePath)
+        print("FILE DELETED")
+    finally: 
+        return 

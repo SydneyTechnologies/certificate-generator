@@ -1,6 +1,10 @@
 import cv2
 from PIL import ImageFont, ImageDraw, Image  
 import numpy as np 
+import urllib.request
+import io
+
+url = 'https://mcs-backend.up.railway.app/resources/'  # Replace with the URL of the image you want to read
 
 def generate_cert(name, track):
 
@@ -25,9 +29,19 @@ def generate_cert(name, track):
     template = Image.fromarray(template)                 #Sending to PIL
     draw = ImageDraw.Draw(template)
 
-    #Loading fonts
-    font1 = ImageFont.truetype('NotoSans-CondensedSemiBold.ttf', 250)  
-    font2 = ImageFont.truetype('NotoSans-Italic.ttf', 100)  
+       #Loading fonts
+    font_one = urllib.request.urlopen(url+"NotoSans-CondensedSemiBold.ttf").read()
+    font_two = urllib.request.urlopen(url+"NotoSans-Italic.ttf").read()
+
+    font_one_path = io.BytesIO(font_one)
+    font_two_path = io.BytesIO(font_two)
+
+
+    # Load the font from the downloaded file
+
+    font1 = ImageFont.truetype(font_one_path, 250)  
+    font2 = ImageFont.truetype(font_two_path, 100)  
+
 
     #Putting text into img
     h = 500
