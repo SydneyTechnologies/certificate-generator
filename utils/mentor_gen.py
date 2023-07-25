@@ -3,6 +3,10 @@ from PIL import ImageFont, ImageDraw, Image
 import numpy as np 
 import urllib.request
 import io
+import ssl
+
+# Disable SSL certificate verification (not recommended for production)
+ssl_context = ssl._create_unverified_context()
 
 url = 'https://mcs-backend.up.railway.app/resources/'  # Replace with the URL of the image you want to read
 
@@ -24,7 +28,7 @@ def generate_cert(name, track):
     line_4 = 'of the participants. We express our heartfelt gratitude for your efforts.'
 
     #now the image
-    req = urllib.request.urlopen(url+'mentor_template.png')
+    req = urllib.request.urlopen(url+'mentor_template.png',context=ssl_context)
     arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
     template = cv2.imdecode(arr, -1)
     template = cv2.cvtColor(template,cv2.COLOR_BGR2RGB)  #OpenCV uses BGR so converting to RGB
@@ -32,8 +36,8 @@ def generate_cert(name, track):
     draw = ImageDraw.Draw(template)
 
        #Loading fonts
-    font_one = urllib.request.urlopen(url+"NotoSans-CondensedSemiBold.ttf").read()
-    font_two = urllib.request.urlopen(url+"NotoSans-Italic.ttf").read()
+    font_one = urllib.request.urlopen(url+"NotoSans-CondensedSemiBold.ttf", context=ssl_context).read()
+    font_two = urllib.request.urlopen(url+"NotoSans-Italic.ttf", context=ssl_context).read()
 
     font_one_path = io.BytesIO(font_one)
     font_two_path = io.BytesIO(font_two)

@@ -5,6 +5,12 @@ import urllib.request
 import io
 
 
+import ssl
+
+# Disable SSL certificate verification (not recommended for production)
+ssl_context = ssl._create_unverified_context()
+
+
 url = 'https://mcs-backend.up.railway.app/resources/'  # Replace with the URL of the image you want to read
 
 
@@ -40,7 +46,7 @@ def generate_cert(name, track):
     line_3 = 'hard work, and commitment have led you to achieve this significant'
     line_4 = 'milestone.  Congratulations on your accomplishment!'
 
-    req = urllib.request.urlopen(url+'cert_template.png')
+    req = urllib.request.urlopen(url+'cert_template.png', context=ssl_context)
     arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
     template = cv2.imdecode(arr, -1)
     if not template.any(): 
@@ -50,8 +56,8 @@ def generate_cert(name, track):
     draw = ImageDraw.Draw(template)
 
     #Loading fonts
-    font_one = urllib.request.urlopen(url+"NotoSans-CondensedSemiBold.ttf").read()
-    font_two = urllib.request.urlopen(url+"NotoSans-Italic.ttf").read()
+    font_one = urllib.request.urlopen(url+"NotoSans-CondensedSemiBold.ttf", context=ssl_context).read()
+    font_two = urllib.request.urlopen(url+"NotoSans-Italic.ttf", context=ssl_context).read()
 
     font_one_path = io.BytesIO(font_one)
     font_two_path = io.BytesIO(font_two)
