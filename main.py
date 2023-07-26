@@ -82,7 +82,7 @@ def getCertificate(email:str, db=Depends(crud.get_db)):
             template = generate_cert(user.fullName, user.track)
             cv2.imwrite(filePath, template)
             response = FileResponse(filePath, filename=filePath, media_type="image/png")
-        asyncio.create_task(deleteCertificate(filePath))
+        # asyncio.run(deleteCertificate(filePath))
         return response
 
     return {"status":"User has not been assigned a certificate"}
