@@ -3,6 +3,7 @@ from PIL import ImageFont, ImageDraw, Image
 import numpy as np 
 import urllib.request
 import io
+import os
 
 
 import ssl
@@ -13,21 +14,8 @@ ssl_context = ssl._create_unverified_context()
 
 url = 'https://mcs-backend.up.railway.app/resources/'  # Replace with the URL of the image you want to read
 
+static_folder = os.path.dirname("resources/cert_template.png")
 
-#import crud, tables
-#rom schema import MemberSchema
-#from connect_to_db import Base, engine
-
-#user = crud.get_user(email, db)
-
-#inputs
-#name = f"{user.fullName}"     #Gotta take name from database, using given email
-#track = f"{user.track}"            #Input from webpage
-
-# Three other files must be in the directory:
-# 1 - the image of the certificate template, 'cert_template.jpeg'
-# 2 - Font 1 file NotoSans-CondensedSemiBold.ttf
-# 3 - Font 2 file NotoSans-Italic.ttf
 
 def generate_cert(name, track):
 
@@ -45,46 +33,34 @@ def generate_cert(name, track):
     line_2 = 'track, in the MDX Computing Society Study Group. Your dedication,'
     line_3 = 'hard work, and commitment have led you to achieve this significant'
     line_4 = 'milestone.  Congratulations on your accomplishment!'
-
-    req = urllib.request.urlopen(url+'cert_template.png', context=ssl_context)
-    arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
-    template = cv2.imdecode(arr, -1)
-    if not template.any(): 
-        return 
+    
+    template = cv2.imread(os.path.join(static_folder, "cert_template.png"))           #Loading the img
     template = cv2.cvtColor(template,cv2.COLOR_BGR2RGB)  #OpenCV uses BGR so converting to RGB
     template = Image.fromarray(template)                 #Sending to PIL
     draw = ImageDraw.Draw(template)
 
-    #Loading fonts
-    font_one = urllib.request.urlopen(url+"NotoSans-CondensedSemiBold.ttf", context=ssl_context).read()
-    font_two = urllib.request.urlopen(url+"NotoSans-Italic.ttf", context=ssl_context).read()
-
-    font_one_path = io.BytesIO(font_one)
-    font_two_path = io.BytesIO(font_two)
+    font_one = os.path.join(static_folder, "NotoSans-CondensedSemiBold.ttf")
+    font_two = os.path.join(static_folder, "NotoSans-Italic.ttf")
 
 
-    # Load the font from the downloaded file
 
-    font1 = ImageFont.truetype(font_one_path, 250)  
-    font2 = ImageFont.truetype(font_two_path, 100)  
+    font1 = ImageFont.truetype(font_one, 100)  
+    font2 = ImageFont.truetype(font_two, 35)  
 
     #Putting text into img
-    h = 500
-    w = 1275
+    h = 100
+    w = 350
+
+    # draw.text((100, 350), "Testing", font=font2, fill='#FF0000') 
 
     if type(name) == list:
-        draw.text((h, w), name[0].upper(), font=font1, fill='#646464')  
-        draw.text((h, w+325), name[1].upper(), font=font1, fill='#646464')  
+        draw.text((h, w), name[0].upper(), font=font1, fill='#000000')  
+        draw.text((h, w+325), name[1].upper(), font=font1, fill='#000000')  
     else:
-        draw.text((h, w+200), name.upper(), font=font1, fill='#646464')
- 
-    draw.text((h, w+300+500), line_1, font=font2, fill='#646464')  
-    draw.text((h, w+300+500+175), line_2, font=font2, fill='#646464') 
-    draw.text((h, w+300+500+175+175), line_3, font=font2, fill='#646464')  
-    draw.text((h, w+300+500+175+175+175), line_4, font=font2, fill='#646464')  
+        draw.text((h, w), name.upper(), font=font1, fill='#000000') 
+    draw.text((h, w+150), line_1, font=font2, fill='#000000')  
+    draw.text((h, w+150+75), line_2, font=font2, fill='#000000') 
+    draw.text((h, w+150+75+75), line_3, font=font2, fill='#000000')  
+    draw.text((h, w+150+75+75+75), line_4, font=font2, fill='#000000')  
 
     return cv2.cvtColor(np.array(template), cv2.COLOR_RGB2BGR)   #Converting back to RGB
-
-#Calling & saving
-# template = generate_cert("Sydney Idundun", "Backend")
-# cv2.imwrite('new/cert_m.png', template)
