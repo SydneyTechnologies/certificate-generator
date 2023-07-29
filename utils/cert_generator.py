@@ -44,23 +44,23 @@ def generate_cert(name, track):
 
 
 
-    font1 = ImageFont.truetype(font_one, 100)  
+    font1 = ImageFont.truetype(font_one, 85)  
     font2 = ImageFont.truetype(font_two, 35)  
 
     #Putting text into img
     h = 100
-    w = 350
+    w = 325
 
     # draw.text((100, 350), "Testing", font=font2, fill='#FF0000') 
 
     if type(name) == list:
         draw.text((h, w), name[0].upper(), font=font1, fill='#000000')  
-        draw.text((h, w+325), name[1].upper(), font=font1, fill='#000000')  
+        draw.text((h, w+100), name[1].upper(), font=font1, fill='#000000')  
     else:
-        draw.text((h, w), name.upper(), font=font1, fill='#000000') 
-    draw.text((h, w+150), line_1, font=font2, fill='#000000')  
-    draw.text((h, w+150+75), line_2, font=font2, fill='#000000') 
-    draw.text((h, w+150+75+75), line_3, font=font2, fill='#000000')  
-    draw.text((h, w+150+75+75+75), line_4, font=font2, fill='#000000')  
+        draw.text((h, w+40), name.upper(), font=font1, fill='#000000') 
+    draw.text((h, w+210), line_1, font=font2, fill='#000000')  
+    draw.text((h, w+210+75), line_2, font=font2, fill='#000000') 
+    draw.text((h, w+210+75+75), line_3, font=font2, fill='#000000')  
+    draw.text((h, w+210+75+75+75), line_4, font=font2, fill='#000000')  
 
     return cv2.cvtColor(np.array(template), cv2.COLOR_RGB2BGR)   #Converting back to RGB
