@@ -31,6 +31,7 @@ Base.metadata.create_all(bind=engine)
 
 @app.post("/users", summary="Creates a new member account", description="Takes in a MemberSchema object which takes all the fields required to create a new user")
 def createUser(member: MemberSchema, db=Depends(crud.get_db)):
+    member.email = member.email.lower()
     new_user = tables.Member(**member.model_dump())
     new_user = crud.createMember(new_user, db)
     if new_user:
@@ -40,6 +41,7 @@ def createUser(member: MemberSchema, db=Depends(crud.get_db)):
 
 @app.post("/certify/{email}", summary="This endpoint will certify that a user has completed the study group program")
 def certifyUser(email:str, db= Depends(crud.get_db)):
+    email = email.lower()
     user = crud.get_user(email, db)
     user = crud.update(user, db, True)
     return user
@@ -54,12 +56,14 @@ def getUsers(track: str | None = None, db = Depends(crud.get_db)):
 
 @app.delete("/delete/{email}", summary="This endpoint will delete the member with the specified email from the database")
 def deleteUser(email: str, db = Depends(crud.get_db)):
+    email = email.lower()
     user = crud.get_user(email, db)
     crud.deleteMember(user, db)
     return {"status":"Member has been deleted"}
 
 @app.post("/api/validate", tags=["Certificate"], summary="Validates if a user has been assigned a certificate")
 def validate(email:str = Body(), track:str = Body(), db=Depends(crud.get_db)):
+    email = email.lower()
     user = crud.get_user(email, db)
     result = crud.certify(user)
     return result
