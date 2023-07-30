@@ -16,5 +16,6 @@ class MemberSchema(BaseModel):
                 "fullName": "John Doe",
                 "track": "Python",
                 "completed": True,
+                "is_mentor": False,
                 "password": "password123",}
         }
