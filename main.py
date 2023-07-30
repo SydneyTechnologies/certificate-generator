@@ -70,6 +70,7 @@ def validate(email:str = Body(), track:str = Body(), db=Depends(crud.get_db)):
 
 @app.get("/api/get_certificate/{email}", tags=["Certificate"], summary="Downloads the certificate for a certified user")
 def getCertificate(email:str, db=Depends(crud.get_db)):
+    email = email.lower()
     user = crud.get_user(email, db)
     if not user:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
